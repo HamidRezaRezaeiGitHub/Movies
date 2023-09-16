@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -29,4 +30,19 @@ public class Movie {
     @DocumentReference
     private List<Review> reviewIds;
 
+    public Movie(String imdbId, String title, String releaseDate, String trailerLink, String poster, List<String> genres, List<String> backdrops, List<Review> reviewIds) {
+        this.imdbId = imdbId;
+        this.title = title;
+        this.releaseDate = releaseDate;
+        this.trailerLink = trailerLink;
+        this.poster = poster;
+        this.genres = genres;
+        this.backdrops = backdrops;
+        this.reviewIds = reviewIds;
+    }
+
+    public void addReview(Review review) {
+        Assert.notNull(review, "Review must not be null!");
+        this.reviewIds.add(review);
+    }
 }

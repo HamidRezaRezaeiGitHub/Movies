@@ -17,16 +17,21 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<Movie> allMovies() {
+    public List<Movie> getAllMovies() {
         return movieRepository.findAll();
     }
 
-    public Optional<Movie> movieByInternalId(ObjectId id) {
+    public Optional<Movie> getMovieByInternalId(ObjectId id) {
         return movieRepository.findById(id);
     }
 
-    public Optional<Movie> movieById(String imdbId) {
+    public Optional<Movie> getMovieByImdbId(String imdbId) {
         return movieRepository.findMovieByImdbId(imdbId);
+    }
+
+    public Optional<Movie> updateMovie(Movie movie) {
+        Optional<Movie> movieOptional = getMovieByImdbId(movie.getImdbId());
+        return movieOptional.map(movie1 -> movieRepository.save(movie));
     }
 
 }
