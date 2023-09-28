@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Layout from "./components/Layout";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/home/Home";
+import Header from "./components/header/Header";
 
 function App() {
   const [movies, setMovies] = useState();
@@ -24,13 +25,15 @@ function App() {
   if (!movies) {
     return (
       <div className="backend-not-up">
-        <h2>hmm! It seems the backend API's not working!</h2>
+        <Header />
+        <h2>Hmm! It seems the backend API is not working!</h2>
       </div>
     );
   }
 
   return (
     <div className="App">
+      <Header />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Home movies={movies} />}></Route>
