@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -43,6 +44,7 @@ public class Movie {
 
     public void addReview(Review review) {
         Assert.notNull(review, "Review must not be null!");
+        if (this.reviewIds == null) this.reviewIds = new ArrayList<>();
         this.reviewIds.add(review);
     }
 }
