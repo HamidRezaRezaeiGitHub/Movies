@@ -40,4 +40,10 @@ public class MovieController {
                 .map(movie -> new ResponseEntity<>(movie, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @DeleteMapping("/deleteReviews/{imdbId}")
+    public ResponseEntity<Void> deleteAllReviewsById(@PathVariable String imdbId) {
+        movieService.deleteAllReviews(imdbId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
