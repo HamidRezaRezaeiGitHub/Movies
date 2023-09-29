@@ -21,8 +21,21 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
+    public static final List<String> PAYLOAD_MANDATORY_FIELDS = List.of("reviewBody");
+    public static final String MANDATORY_FIELD_MISSING_MESSAGE = "Mandatory fields are not passed: " + PAYLOAD_MANDATORY_FIELDS;
+
+    public static boolean verifyPayloadMandatoryFields(Map<String, String> payload) {
+        for (String payloadMandatoryField : PAYLOAD_MANDATORY_FIELDS) {
+            if (!payload.containsKey(payloadMandatoryField)) return false;
+        }
+        return true;
+    }
+
     @PostMapping("/{imdbId}")
-    public ResponseEntity<Review> createReviewForImdbId(@PathVariable String imdbId, @RequestBody Map<String, String> payload) {
+    public ResponseEntity createReviewForImdbId(@PathVariable String imdbId, @RequestBody Map<String, String> payload) {
+        if (!verifyPayloadMandatoryFields(payload)) {
+            return new ResponseEntity<>(MANDATORY_FIELD_MISSING_MESSAGE, HttpStatus.BAD_REQUEST);
+        }
         Optional<Review> reviewOptional = reviewService.createReview(payload.get("reviewBody"), imdbId);
         return reviewOptional
                 .map(review -> new ResponseEntity<>(review, HttpStatus.CREATED))
