@@ -33,7 +33,7 @@ public class ReviewIntegrationTest {
     @BeforeEach
     public void setup() {
         movie = Movie.builder()
-                .imdbId("imdb1")
+                .imdbId("test imdb")
                 .title("test title")
                 .releaseDate("test releaseDate")
                 .trailerLink("test trailerLink")
@@ -44,16 +44,16 @@ public class ReviewIntegrationTest {
                 .build();
         movieRepository.save(movie);
         logger.info("A movie saved into the repository. {}", movieRepository.findAll());
-        Optional<Movie> movieOptional = movieRepository.findMovieByImdbId("imdb1");
+        Optional<Movie> movieOptional = movieRepository.findMovieByImdbId("test imdb");
         Assertions.assertTrue(movieOptional.isPresent());
         logger.info("The saved movie: {}", movieOptional.get());
-        Assertions.assertEquals("imdb1", movieOptional.get().getImdbId());
+        Assertions.assertEquals("test imdb", movieOptional.get().getImdbId());
     }
 
     @AfterEach
     public void cleanup() {
-        movieRepository.deleteAll();
-        logger.info("All movies deleted from the repository. {}", movieRepository.findAll());
+        movieRepository.deleteByImdbId("test imdb");
+        logger.info("The test movie deleted from the repository. {}", movieRepository.findAll());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class ReviewIntegrationTest {
 
     @Test
     public void test_okEmptyList_when_getAllReviewsOfImdbId_correctImdbId() {
-        ResponseEntity<List<Review>> response = reviewController.getAllReviewsOfImdbId("imdb1");
+        ResponseEntity<List<Review>> response = reviewController.getAllReviewsOfImdbId("test imdb");
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertTrue(response.getBody() == null || response.getBody().isEmpty());
     }
@@ -77,7 +77,7 @@ public class ReviewIntegrationTest {
         movie.addReview(review);
 //        logger.info("Saving new review in the repository: {}", reviewRepository.save(review));
         logger.info("Saving updated movie in the repository: {}", movieRepository.save(movie));
-        ResponseEntity<List<Review>> response = reviewController.getAllReviewsOfImdbId("imdb1");
+        ResponseEntity<List<Review>> response = reviewController.getAllReviewsOfImdbId("test imdb");
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertTrue(response.getBody() == null || response.getBody().isEmpty());
     }
@@ -88,14 +88,14 @@ public class ReviewIntegrationTest {
         movie.addReview(review);
         logger.info("Saving new review in the repository: {}", reviewRepository.save(review));
         logger.info("Saving updated movie in the repository: {}", movieRepository.save(movie));
-        ResponseEntity<List<Review>> response = reviewController.getAllReviewsOfImdbId("imdb1");
+        ResponseEntity<List<Review>> response = reviewController.getAllReviewsOfImdbId("test imdb");
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertTrue(response.getBody() != null && !response.getBody().isEmpty());
     }
 
     @Test
     public void test_badRequest_when_createReviewForImdbId_badPayload() {
-        ResponseEntity responseEntity = reviewController.createReviewForImdbId("imdb1", new HashMap<>());
+        ResponseEntity responseEntity = reviewController.createReviewForImdbId("test imdb", new HashMap<>());
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -111,7 +111,7 @@ public class ReviewIntegrationTest {
     public void test_createdCorrectReview_when_createReviewForImdbId() {
         Map<String, String> payload = new HashMap<>();
         payload.put("reviewBody", "test review body");
-        ResponseEntity response = reviewController.createReviewForImdbId("imdb1", payload);
+        ResponseEntity response = reviewController.createReviewForImdbId("test imdb", payload);
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
         Review createdReview = (Review) response.getBody();
@@ -122,9 +122,9 @@ public class ReviewIntegrationTest {
     public void test_correctReviewSaved_when_createReviewForImdbId() {
         Map<String, String> payload = new HashMap<>();
         payload.put("reviewBody", "test review body");
-        reviewController.createReviewForImdbId("imdb1", payload);
+        reviewController.createReviewForImdbId("test imdb", payload);
 
-        ResponseEntity<List<Review>> response = reviewController.getAllReviewsOfImdbId("imdb1");
+        ResponseEntity<List<Review>> response = reviewController.getAllReviewsOfImdbId("test imdb");
         Assertions.assertTrue(response.getBody() != null && !response.getBody().isEmpty());
         Assertions.assertEquals("test review body", response.getBody().get(0).getBody());
     }
