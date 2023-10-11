@@ -7,8 +7,11 @@ import com.hrr.movies.repository.ReviewRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -42,6 +45,17 @@ public class ReviewService {
 
     public void deleteById(ObjectId id) {
         reviewRepository.deleteById(id);
+    }
+
+    public void deleteOrphans() {
+        List<Review> allReviews = reviewRepository.findAll();
+        Set<Review> reviewsSet = movieRepository.findAll().stream()
+                .map(Movie::getReviewIds)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+        allReviews.stream()
+                .filter(review -> !reviewsSet.contains(review))
+                .forEach(review -> deleteById(review.getId()));
     }
 
 }

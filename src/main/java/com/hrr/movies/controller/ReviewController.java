@@ -49,4 +49,10 @@ public class ReviewController {
                 .map(reviews -> new ResponseEntity<>(reviews, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @DeleteMapping("/orphan")
+    public ResponseEntity<Void> deleteOrphanReviews() {
+        reviewService.deleteOrphans();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

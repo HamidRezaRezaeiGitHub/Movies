@@ -128,4 +128,13 @@ public class ReviewIntegrationTest {
         Assertions.assertTrue(response.getBody() != null && !response.getBody().isEmpty());
         Assertions.assertEquals("test review body", response.getBody().get(0).getBody());
     }
+
+    @Test
+    public void test_orphanReviewsDeleted_when_deleteOrphanReviews() {
+        Review orphanReview = new Review("test review body");
+        logger.info("Saving new orphan review in the repository: {}", reviewRepository.save(orphanReview));
+        ResponseEntity<Void> response = reviewController.deleteOrphanReviews();
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertFalse(reviewRepository.findAll().contains(orphanReview));
+    }
 }
