@@ -42,10 +42,7 @@ function App() {
     return (
       <div className="App">
         <Header />
-        <div class="ring">
-          Loading
-          <span></span>
-        </div>
+        <div class="ring">Loading</div>
       </div>
     );
   }
