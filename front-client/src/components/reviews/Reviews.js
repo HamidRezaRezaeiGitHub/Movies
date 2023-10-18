@@ -3,6 +3,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import ReviewForm from "../reviewForm/ReviewForm";
 import api from "../../api/axiosConfig";
+import "./Reviews.css";
 
 const Reviews = ({ getMovieData, movie, reviews, setReviews }) => {
   const revText = useRef();
@@ -38,7 +39,7 @@ const Reviews = ({ getMovieData, movie, reviews, setReviews }) => {
         </Col>
       </Row>
       <Row className="mt-2">
-        <Col>
+        <Col xs={12} md={6}>
           <img src={movie?.poster} alt="" />
         </Col>
         <Col>
