@@ -40,9 +40,12 @@ function App() {
 
   if (!movies) {
     return (
-      <div className="backend-not-up">
+      <div className="App">
         <Header />
-        <h2>Hmm! It seems the backend API is not working!</h2>
+        <div class="ring">
+          Loading
+          <span></span>
+        </div>
       </div>
     );
   }
